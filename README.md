@@ -18,6 +18,8 @@ Todo: I will also create a playlist creator next, to create a playlist of the vi
 
 This bypasses the youtube video limit of 10 videos per day, as the videos are concatenated into one video but viewed as separate videos.
 
+PS: a small scrapper also written for scrapping a source once it has been saved as an offline page (as the page is auth protected and can't be accessed directly + the source is not available in the page source immediately as it works with hydration and is not using SSR). This could be done with puppeteer but I am not using it and encourage you to use it if you want to scrap the source directly. I do not want to pay for proxies and I am not interested in using the free ones.
+
 Author: [Sagar Yadav](https://linkedin.com/in/sagaryadav)
 
 Copyright: 2024 Sagar Yadav
