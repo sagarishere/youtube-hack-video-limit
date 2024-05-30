@@ -40,10 +40,15 @@ def create_ffmpeg_concat_file(renamed_files):
 
 def main():
     folders = get_folders_sorted()
+    write_to_folders_txt(folders)
     mp4_files = get_mp4_files_sorted(folders)
     renamed_files = copy_and_rename_files(mp4_files)
     create_ffmpeg_concat_file(renamed_files)
-    # combine_videos()
+
+def write_to_folders_txt(folders):
+    with open('folders.txt', 'w') as f:
+        for folder in folders:
+            f.write(f"{folder}\n")
 
 if __name__ == "__main__":
     main()
