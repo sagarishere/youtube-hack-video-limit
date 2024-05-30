@@ -20,6 +20,13 @@ This bypasses the youtube video limit of 10 videos per day, as the videos are co
 
 PS: a small scrapper also written for scrapping a source once it has been saved as an offline page (as the page is auth protected and can't be accessed directly + the source is not available in the page source immediately as it works with hydration and is not using SSR). This could be done with puppeteer but I am not using it and encourage you to use it if you want to scrap the source directly. I do not want to pay for proxies and I am not interested in using the free ones.
 
+## Implications
+
+- This bypasses the youtube video limit of 10 videos per day, as the videos are concatenated into one video but viewed as separate videos.
+- The video can be uploaded to youtube, and the video limit is bypassed.
+- The playlist is generated to view the videos separately.
+- The playlist can be used as videojumper on youtube or on seperate website with custom video player (or even simple html video player) to give illusion of seperate videos.
+
 Author: [Sagar Yadav](https://linkedin.com/in/sagaryadav)
 
 Copyright: 2024 Sagar Yadav
