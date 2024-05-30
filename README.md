@@ -6,7 +6,7 @@ This is an advanced project to bypass the youtube video limit of 10 videos per d
 
 The python moviepy library can be used to create a video with the desired number of videos. In-fact it is the most popular method and I found lots of solution on the internet using moviepy. As well as ChatGPT also suggests to use moviepy to concatenate the videos.
 
-However, I found that when using Rust, the process is **10 million times faster**, benchmarked against 84 videos of variable audio-bit rates with total length of 6 hours.
+However, I found that when using Rust, the process is **2040 times faster**, benchmarked against 84 videos of variable audio-bit rates with total length of 6 hours.
 
 Using ffmpeg to concatenate the videos with variable bitrate audio streams is not possible, as the audio streams are not concatenated correctly.
 
