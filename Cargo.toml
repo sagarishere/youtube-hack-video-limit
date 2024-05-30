@@ -6,9 +6,13 @@ edition = "2021"
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
+mp4 = "0.14.0"
 mp4_merge = "0.1.8"
 scraper = "0.19.0"
 
 [[bin]]
 name = "make_folders"
 path = "src/scrape_offline_to_make_folders"
+
+name = "create_playlist"
+path = "src/create_playlist.rs"
