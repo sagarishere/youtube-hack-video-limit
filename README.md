@@ -21,12 +21,12 @@ PS: a small scrapper also written for scrapping a source once it has been saved 
 ## Run
 
 ```bash
-# To scrape the source
+# To scrape the source => will make folders from scraped website
 cargo run --release --bin make_folders
-# To make the playlists
-cargo run --release --bin make_playlists
-# To concatenate the videos
-cargo run --release
+# To make the playlists => will create playlist.txt
+cargo run --release --bin create_playlist
+# To concatenate the videos => will create combined_video.mp4
+cargo run --release --bin combine_videos
 ```
 
 ## Implications
