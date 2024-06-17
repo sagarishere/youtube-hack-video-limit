@@ -53,7 +53,14 @@ fn get_mp4_files_sorted(folders: Vec<String>) -> std::io::Result<()> {
                         playlist,
                         "⌨️ ({}) {:?}",
                         format_duration(course_time),
-                        file.file_name().unwrap()
+                        (file
+                            .file_name()
+                            .unwrap()
+                            .to_os_string()
+                            .into_string()
+                            .unwrap())
+                        .strip_suffix(".mp4")
+                        .unwrap()
                     )?;
                     course_time += duration_secs;
                 }

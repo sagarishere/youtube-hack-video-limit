@@ -20,3 +20,5 @@ myenv/
 **/*.log
 
 .cosine
+
+*.mp4
