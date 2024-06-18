@@ -23,12 +23,12 @@ PS: a small scrapper also written for scrapping a source once it has been saved 
 ```bash
 # To scrape the source => will make folders from scraped website
 cargo run --release --bin make_folders
-# To make the playlists => will create playlist.txt
-cargo run --release --bin create_playlist
 # To delete unwated cache files => will delete unwanted files
 python delete_unwanted.py
 # To pre-copy video files => will copy the video files to the output folder
 cargo run --release --bin arrange_videos
+# To make the playlists => will create playlist.txt
+cargo run --release --bin create_playlist
 # To concatenate the videos => will create combined_video.mp4
 cargo run --release --bin combine_videos
 ```
