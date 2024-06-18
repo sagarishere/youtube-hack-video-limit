@@ -15,6 +15,13 @@ def get_mp4_files_sorted(folders):
     for folder in folders:
         folder_path = os.path.join(os.getcwd(), folder)
         files = [f for f in os.listdir(folder_path) if f.endswith('.mp4')]
+        # if any of the file has less than 2 consequetive digits in the very beginning of their file name, then add a "0" in front of it
+        for i, file in enumerate(files):
+            if not file[0].isdigit() or not file[1].isdigit():
+                new_file = "0" + file
+                os.rename(os.path.join(folder_path, file), os.path.join(folder_path, new_file))
+                files[i] = new_file
+                # print(f"Renamed {file} to {new_file}")
         files.sort()
         mp4_files.extend([(folder, f) for f in files])
     return mp4_files
@@ -25,7 +32,7 @@ def copy_and_rename_files(mp4_files):
     renamed_files = []
     for index, (folder, file_name) in enumerate(mp4_files, start=1):
         old_path = os.path.join(current_dir, folder, file_name)
-        new_file_name = f"{index:02d}{file_name[file_name.find(' '):]}"  # Renaming logic
+        new_file_name = f"{index:03d}{file_name[file_name.find(' '):]}"  # Renaming logic
         new_path = os.path.join(current_dir, new_file_name)
         shutil.copy(old_path, new_path)
         renamed_files.append(new_file_name)

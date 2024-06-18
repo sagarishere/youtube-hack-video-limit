@@ -18,3 +18,8 @@ path = "./src/bin/scrape_offline_to_make_folders.rs"
 
 name = "create_playlist"
 path = "./src/bin/create_playlist.rs"
+
+[[bin]]
+
+name = "arrange_videos"
+path = "./src/bin/arrange.rs"
