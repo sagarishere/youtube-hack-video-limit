@@ -51,7 +51,7 @@ fn get_mp4_files_sorted(folders: Vec<String>) -> std::io::Result<()> {
                 Ok(duration_secs) => {
                     writeln!(
                         playlist,
-                        "⌨️ ({}) {:?}",
+                        "⌨️ ({}) {}",
                         format_duration(course_time),
                         (file
                             .file_name()

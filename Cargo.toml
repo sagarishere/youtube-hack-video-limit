@@ -9,6 +9,8 @@ edition = "2021"
 mp4 = "0.14.0"
 mp4-merge = "0.1.8"
 scraper = "0.19.0"
+rayon = "1.10.0"
+indicatif = "0.17.8"
 
 [[bin]]
 name = "make_folders"
@@ -23,3 +25,13 @@ path = "./src/bin/create_playlist.rs"
 
 name = "arrange_videos"
 path = "./src/bin/arrange.rs"
+
+[[bin]]
+
+name = "combine_step"
+path = "./src/bin/combine_step.rs"
+
+[[bin]]
+
+name = "combine_all"
+path = "./src/bin/combine_all.rs"

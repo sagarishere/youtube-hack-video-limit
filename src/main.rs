@@ -32,7 +32,7 @@ fn main() {
     }
 
     // Output file path
-    let output_file = format!("{}combined_video.mp4", directory);
+    let output_file = format!("{}/combined_video.mp4", directory);
 
     // Merge video files
     match join_files(&video_files, &output_file, |progress| {
