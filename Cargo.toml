@@ -11,6 +11,7 @@ mp4-merge = "0.1.8"
 scraper = "0.19.0"
 rayon = "1.10.0"
 indicatif = "0.17.8"
+rand = "0.8.5"
 
 [[bin]]
 name = "make_folders"
@@ -35,3 +36,8 @@ path = "./src/bin/combine_step.rs"
 
 name = "combine_all"
 path = "./src/bin/combine_all.rs"
+
+[[bin]]
+
+name = "combine_random"
+path = "./src/bin/combine_random.rs"
