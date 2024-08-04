@@ -104,6 +104,11 @@ fn reencode_files_parallel(mp4_files: &[(String, String)]) {
     let current_dir = env::current_dir().unwrap();
     mp4_files.par_iter().for_each(|(folder, file_name)| {
         let old_path = current_dir.join(folder).join(file_name);
+        println!(
+            "\x1B[33mRe-encoding file {} of {}\x1B[0m",
+            mp4_files.iter().position(|x| x == &(folder.clone(), file_name.clone())).unwrap() + 1,
+            mp4_files.len()
+        );
         reencode_video(old_path.to_str().unwrap()).unwrap();
     });
 }
