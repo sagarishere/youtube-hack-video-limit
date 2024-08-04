@@ -20,34 +20,60 @@ PS: a small scrapper also written for scrapping a source once it has been saved 
 
 ## Run
 
-```bash
-# To scrape the source => will make folders from scraped website
-cargo run --release --bin make_folders
-# To delete unwated cache files => will delete unwanted files
-python delete_unwanted.py
-# To replace the original files with reencoded files => will reencode the files
-cargo run --release --bin arrange_improv
-# To pre-copy video files => will copy the video files to the output folder
-cargo run --release --bin arrange_videos
-# To make the playlists => will create playlist.txt
-cargo run --release --bin create_playlist
-# To concatenate the videos => will create combined_video.mp4
-cargo run --release --bin combine_videos
-```
+### To scrape the source if required
+
+    ```bash
+        # To scrape the source => will make folders from scraped website
+        cargo run --release --bin make_folders
+    ```
+
+### Housekeeping
+
+    ```bash
+        # To make the playlists => will create playlist.txt
+        cargo run --release --bin create_playlist
+    ```
+
+    ```bash
+        # To delete unwated cache files => will delete unwanted files
+        python delete_unwanted.py
+    ```
+
+### To reencode the videos for preventing Non-monotonic DTS errors while concatenating
+
+    ```bash
+        # To reencode the videos => will reencode the videos
+        cargo run --release --bin arrange_improv
+    ```
+
+### To concatenate the videos
+
+    ```bash
+        # To concatenate the videos => will create combined_video.mp4
+        cargo run --release --bin combine_videos
+    ```
 
 ## Note
 
 Direct way to delete unwated files
 
-```bash
-find . -type f -name "._*" -delete
-```
+    ```bash
+        find . -type f -name "._*" -delete
+    ```
 
 Direct bash command to make folder.txt
 
-```bash
-find . -maxdepth 1 -type d -regex '\./[0-9].*' | sed 's/.\///' | sort > folders.txt
-```
+    ```bash
+        find . -maxdepth 1 -type d -regex '\./[0-9].*' | sed 's/.\///' | sort > folders.txt
+    ```
+
+To copy files to the base directory and rename them, in case they have already been reencoded (rarity)
+
+    ```bash
+        # To replace the original files with reencoded files => will reencode the files
+        # To pre-copy video files => will copy the video files to the output folder
+        cargo run --release --bin arrange_videos
+    ```
 
 ## Implications
 
