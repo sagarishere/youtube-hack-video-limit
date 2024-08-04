@@ -61,6 +61,12 @@ Direct way to delete unwated files
         find . -type f -name "._*" -delete
     ```
 
+    offcourse to delete all .mp4 files (warning: this will delete all mp4 files)
+
+    ```bash
+        find . -type f -name "*.mp4" -delete
+    ```
+
 Direct bash command to make folder.txt
 
     ```bash
