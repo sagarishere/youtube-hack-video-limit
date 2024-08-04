@@ -46,3 +46,8 @@ path = "./src/bin/combine_random.rs"
 
 name = "rand_all"
 path = "./src/bin/combine_rand_all.rs"
+
+[[bin]]
+
+name = "rand_all_improv"
+path = "./src/bin/combine_rand_all_improv.rs"
