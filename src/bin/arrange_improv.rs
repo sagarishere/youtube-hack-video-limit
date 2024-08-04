@@ -1,6 +1,8 @@
+use rayon::prelude::*;
 use std::env;
 use std::fs;
-use std::io::Write;
+use std::io::{self, Write};
+use std::process::Command;
 
 fn get_folders_sorted() -> Vec<String> {
     let current_dir = env::current_dir().unwrap();
@@ -56,9 +58,60 @@ fn get_mp4_files_sorted(folders: Vec<String>) -> Vec<(String, String)> {
     mp4_files
 }
 
-fn copy_and_rename_files(mp4_files: Vec<(String, String)>) -> Vec<String> {
+fn reencode_video(input_file: &str) -> io::Result<()> {
+    let temp_output = format!("{}.tmp.mp4", input_file);
+    let status = Command::new("ffmpeg")
+        .arg("-i")
+        .arg(input_file)
+        .arg("-vf")
+        .arg("fps=30")
+        .arg("-c:v")
+        .arg("libx264")
+        .arg("-crf")
+        .arg("23")
+        .arg("-preset")
+        .arg("fast")
+        .arg("-c:a")
+        .arg("aac")
+        .arg("-b:a")
+        .arg("192k")
+        .arg(&temp_output)
+        .status();
+
+    match status {
+        Ok(status) if status.success() => {
+            fs::rename(&temp_output, input_file)?; // Replace original file
+            Ok(())
+        }
+        Ok(status) => {
+            eprintln!(
+                "FFmpeg failed to re-encode {} with exit code: {}",
+                input_file, status
+            );
+            Err(io::Error::new(
+                io::ErrorKind::Other,
+                "FFmpeg re-encode failed",
+            ))
+        }
+        Err(e) => {
+            eprintln!("Failed to execute FFmpeg for re-encoding: {}", e);
+            Err(e)
+        }
+    }
+}
+
+fn reencode_files_parallel(mp4_files: &[(String, String)]) {
+    let current_dir = env::current_dir().unwrap();
+    mp4_files.par_iter().for_each(|(folder, file_name)| {
+        let old_path = current_dir.join(folder).join(file_name);
+        reencode_video(old_path.to_str().unwrap()).unwrap();
+    });
+}
+
+fn rename_files_sequential(mp4_files: Vec<(String, String)>) -> Vec<String> {
     let current_dir = env::current_dir().unwrap();
     let mut renamed_files = Vec::new();
+
     for (index, (folder, file_name)) in mp4_files.into_iter().enumerate() {
         let old_path = current_dir.join(&folder).join(&file_name);
         let new_file_name = format!(
@@ -67,9 +120,9 @@ fn copy_and_rename_files(mp4_files: Vec<(String, String)>) -> Vec<String> {
             &file_name[file_name.find(' ').unwrap_or(0)..]
         );
         let new_path = current_dir.join(&new_file_name);
-        fs::copy(&old_path, &new_path).unwrap();
+        fs::rename(&old_path, &new_path).unwrap();
         renamed_files.push(new_file_name.clone());
-        println!("Copied and renamed: {:?} to {:?}", old_path, new_path);
+        println!("Renamed: {:?} to {:?}", old_path, new_path);
     }
     renamed_files
 }
@@ -92,6 +145,7 @@ fn main() {
     let folders = get_folders_sorted();
     write_to_folders_txt(folders.clone());
     let mp4_files = get_mp4_files_sorted(folders);
-    let renamed_files = copy_and_rename_files(mp4_files);
+    reencode_files_parallel(&mp4_files);
+    let renamed_files = rename_files_sequential(mp4_files);
     create_ffmpeg_concat_file(renamed_files);
 }
