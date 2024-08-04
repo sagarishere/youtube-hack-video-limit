@@ -77,13 +77,45 @@ fn get_mp4_files_sorted(folders: Vec<String>) -> std::io::Result<()> {
 }
 
 fn main() -> io::Result<()> {
-    let file = File::open("folders.txt")?;
-    let reader = BufReader::new(file);
-    let folders: Vec<String> = reader.lines().collect::<Result<_, _>>()?;
+    loop {
+        let fileresult = File::open("folders.txt");
+        let file = match fileresult {
+            Ok(file) => file,
+            Err(e) => {
+                println!("Error: {}", e);
+                println!("Creating folders.txt file");
+                makefoldertxt();
+                continue;
+            }
+        };
+        let reader = BufReader::new(file);
+        let folders: Vec<String> = reader.lines().collect::<Result<_, _>>()?;
 
-    if let Err(e) = get_mp4_files_sorted(folders) {
-        eprintln!("Error: {}", e);
+        if let Err(e) = get_mp4_files_sorted(folders) {
+            eprintln!("Error: {}", e);
+        }
+
+        break;
     }
 
     Ok(())
+}
+
+fn makefoldertxt() {
+    let output = Command::new("bash")
+        .arg("-c")
+        .arg("find . -maxdepth 1 -type d -regex '\\./[0-9].*' | sed 's/\\.\\/\\(.*\\)/\\1/' | sort > folders.txt")
+        .output()
+        .expect("Failed to execute command");
+
+    let stdout = String::from_utf8_lossy(&output.stdout);
+    let stderr = String::from_utf8_lossy(&output.stderr);
+
+    println!("Status: {}", output.status);
+    if stdout.trim().len() > 0 {
+        println!("stdout: {}", stdout);
+    }
+    if stderr.trim().len() > 0 {
+        println!("stderr: {}", stderr);
+    }
 }
