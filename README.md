@@ -25,6 +25,8 @@ PS: a small scrapper also written for scrapping a source once it has been saved 
 cargo run --release --bin make_folders
 # To delete unwated cache files => will delete unwanted files
 python delete_unwanted.py
+# To replace the original files with reencoded files => will reencode the files
+cargo run --release --bin arrange_improv
 # To pre-copy video files => will copy the video files to the output folder
 cargo run --release --bin arrange_videos
 # To make the playlists => will create playlist.txt
