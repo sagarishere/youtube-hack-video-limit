@@ -33,6 +33,15 @@ cargo run --release --bin create_playlist
 cargo run --release --bin combine_videos
 ```
 
+
+## Note
+
+Direct bash command to make folder.txt
+
+```bash
+find . -maxdepth 1 -type d -regex '\./[0-9].*' | sed 's/.\///' | sort > folders.txt
+```
+
 ## Implications
 
 - This bypasses the youtube video limit of 10 videos per day, as the videos are concatenated into one video but viewed as separate videos.
