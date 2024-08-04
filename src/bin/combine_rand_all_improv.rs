@@ -54,24 +54,12 @@ fn main() -> io::Result<()> {
 
         println!("Combining {} and {}", file1, file2);
 
-        // Check if re-encoding is required for the selected video files
+        // Re-encode the selected video files
         let reencoded_file1 = format!("reencoded_{}.mp4", random_index);
         let reencoded_file2 = format!("reencoded_{}.mp4", random_index + 1);
 
-        let needs_reencode1 = check_non_monotonous_dts(file1)?;
-        let needs_reencode2 = check_non_monotonous_dts(file2)?;
-
-        if needs_reencode1 {
-            reencode_video(file1, &reencoded_file1)?;
-        } else {
-            fs::copy(file1, &reencoded_file1)?;
-        }
-
-        if needs_reencode2 {
-            reencode_video(file2, &reencoded_file2)?;
-        } else {
-            fs::copy(file2, &reencoded_file2)?;
-        }
+        reencode_video(file1, &reencoded_file1)?;
+        reencode_video(file2, &reencoded_file2)?;
 
         // Create a temporary text file with the list of the re-encoded video files
         let concat_list = "concat_list.txt";
@@ -92,8 +80,16 @@ fn main() -> io::Result<()> {
             .arg("0")
             .arg("-i")
             .arg(concat_list)
-            .arg("-c")
-            .arg("copy")
+            .arg("-c:v")
+            .arg("libx264")
+            .arg("-crf")
+            .arg("23")
+            .arg("-preset")
+            .arg("fast")
+            .arg("-c:a")
+            .arg("aac")
+            .arg("-b:a")
+            .arg("192k")
             .arg(&output_file)
             .status();
 
@@ -132,23 +128,12 @@ fn main() -> io::Result<()> {
     Ok(())
 }
 
-fn check_non_monotonous_dts(file: &str) -> io::Result<bool> {
-    let output = Command::new("ffmpeg")
-        .arg("-i")
-        .arg(file)
-        .arg("-f")
-        .arg("null")
-        .arg("-")
-        .output()?;
-
-    let stderr = String::from_utf8_lossy(&output.stderr);
-    Ok(stderr.contains("Non-monotonous DTS"))
-}
-
 fn reencode_video(input_file: &str, output_file: &str) -> io::Result<()> {
     let status = Command::new("ffmpeg")
         .arg("-i")
         .arg(input_file)
+        .arg("-vf")
+        .arg("fps=30")
         .arg("-c:v")
         .arg("libx264")
         .arg("-crf")
@@ -159,8 +144,6 @@ fn reencode_video(input_file: &str, output_file: &str) -> io::Result<()> {
         .arg("aac")
         .arg("-b:a")
         .arg("192k")
-        .arg("-vf")
-        .arg("fps=30")
         .arg(output_file)
         .status();
 
