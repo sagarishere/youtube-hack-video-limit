@@ -46,7 +46,7 @@ fn get_mp4_files_sorted(folders: Vec<String>) -> Vec<(String, String)> {
                 let new_file = format!("0{}", file);
                 let old_path = folder_path.join(&file);
                 let new_path = folder_path.join(&new_file);
-                fs::rename(&old_path, &new_path).unwrap();
+                fs::copy(&old_path, &new_path).unwrap();
                 *file = new_file;
             }
         }

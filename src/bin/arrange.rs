@@ -67,7 +67,7 @@ fn copy_and_rename_files(mp4_files: Vec<(String, String)>) -> Vec<String> {
             &file_name[file_name.find(' ').unwrap_or(0)..]
         );
         let new_path = current_dir.join(&new_file_name);
-        fs::copy(&old_path, &new_path).unwrap();
+        fs::rename(&old_path, &new_path).unwrap();
         renamed_files.push(new_file_name.clone());
         println!("Copied and renamed: {:?} to {:?}", old_path, new_path);
     }
