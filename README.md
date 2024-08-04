@@ -33,8 +33,13 @@ cargo run --release --bin create_playlist
 cargo run --release --bin combine_videos
 ```
 
-
 ## Note
+
+Direct way to delete unwated files
+
+```bash
+find . -type f -name "._*" -delete
+```
 
 Direct bash command to make folder.txt
 
