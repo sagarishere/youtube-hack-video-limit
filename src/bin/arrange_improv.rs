@@ -46,7 +46,7 @@ fn get_mp4_files_sorted(folders: Vec<String>) -> Vec<(String, String)> {
                 let new_file = format!("0{}", file);
                 let old_path = folder_path.join(&file);
                 let new_path = folder_path.join(&new_file);
-                fs::copy(&old_path, &new_path).unwrap();
+                fs::rename(&old_path, &new_path).unwrap();
                 *file = new_file;
             }
         }
@@ -106,7 +106,11 @@ fn reencode_files_parallel(mp4_files: &[(String, String)]) {
         let old_path = current_dir.join(folder).join(file_name);
         println!(
             "\x1B[33mRe-encoding file {} of {}\x1B[0m",
-            mp4_files.iter().position(|x| x == &(folder.clone(), file_name.clone())).unwrap() + 1,
+            mp4_files
+                .iter()
+                .position(|x| x == &(folder.clone(), file_name.clone()))
+                .unwrap()
+                + 1,
             mp4_files.len()
         );
         reencode_video(old_path.to_str().unwrap()).unwrap();
