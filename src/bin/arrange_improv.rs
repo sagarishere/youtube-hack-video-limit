@@ -102,20 +102,6 @@ fn reencode_video(input_file: &str) -> io::Result<()> {
 
 fn reencode_files_parallel(mp4_files: &[(String, String)]) {
     let current_dir = env::current_dir().unwrap();
-    // if a file count.txt is not present, create it
-    let count_file = current_dir.join("count.txt");
-    if !count_file.exists() {
-        let mut file = fs::File::create(&count_file).unwrap();
-        writeln!(file, "{}", mp4_files.len()).unwrap();
-    }
-
-    let mut file = fs::OpenOptions::new()
-        .write(true)
-        .truncate(true)
-        .open(&count_file)
-        .unwrap();
-    // Now, write the string "0" to the file
-    file.write_all(b"0").unwrap(); // b"0" is used because write_all expects bytes
     mp4_files.par_iter().for_each(|(folder, file_name)| {
         let old_path = current_dir.join(folder).join(file_name);
         // read count.txt
@@ -178,10 +164,16 @@ fn write_to_folders_txt(folders: Vec<String>) {
     }
 }
 
+fn make_count_txt() {
+    let mut file = fs::File::create("count.txt").unwrap();
+    writeln!(file, "0").unwrap();
+}
+
 fn main() {
     let folders = get_folders_sorted();
     write_to_folders_txt(folders.clone());
     let mp4_files = get_mp4_files_sorted(folders);
+    make_count_txt();
     reencode_files_parallel(&mp4_files);
     let renamed_files = rename_files_sequential(mp4_files);
     create_ffmpeg_concat_file(renamed_files);
