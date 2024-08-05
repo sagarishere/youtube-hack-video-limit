@@ -90,6 +90,12 @@ To copy files to the base directory and rename them, in case they have already b
         cargo run --release --bin arrange_videos
     ```
 
+To make rust executable
+
+    ```bash
+        cargo build --release --bin arrange_improv && cp target/release/arrange_improv .
+    ```
+
 ## Implications
 
 - This bypasses the youtube video limit of 10 videos per day, as the videos are concatenated into one video but viewed as separate videos.
