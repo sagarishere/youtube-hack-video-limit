@@ -3,6 +3,7 @@ use std::env;
 use std::fs;
 use std::io::{self, Write};
 use std::process::Command;
+use std::sync::{Arc, Mutex};
 
 fn get_folders_sorted() -> Vec<String> {
     let current_dir = env::current_dir().unwrap();
@@ -102,21 +103,16 @@ fn reencode_video(input_file: &str) -> io::Result<()> {
 
 fn reencode_files_parallel(mp4_files: &[(String, String)]) {
     let current_dir = env::current_dir().unwrap();
+    let count = Arc::new(Mutex::new(0));
     mp4_files.par_iter().for_each(|(folder, file_name)| {
         let old_path = current_dir.join(folder).join(file_name);
-        // read count.txt
-        let countfile = fs::read("./count.txt").unwrap();
-        let count = String::from_utf8(countfile).unwrap();
-        // increment count
-        let count_int: i32 = count.trim().parse().unwrap();
-        let new_count = count_int + 1;
-        // write new count to count.txt, overwrite old content of count.txt
-        let mut file = fs::OpenOptions::new()
-            .write(true)
-            .truncate(true)
-            .open("./count.txt")
-            .unwrap();
-        writeln!(file, "{}", new_count).unwrap();
+        
+        // Increment count using Mutex for thread safety
+        let mut count_guard = count.lock().unwrap();
+        *count_guard += 1;
+        let current_count = *count_guard;
+        drop(count_guard);
+        
         println!(
             "\x1B[33mRe-encoding file {} of {}. Total files started: {}\x1B[0m",
             mp4_files
@@ -125,7 +121,7 @@ fn reencode_files_parallel(mp4_files: &[(String, String)]) {
                 .unwrap()
                 + 1,
             mp4_files.len(),
-            new_count
+            current_count
         );
         reencode_video(old_path.to_str().unwrap()).unwrap();
     });
@@ -164,16 +160,10 @@ fn write_to_folders_txt(folders: Vec<String>) {
     }
 }
 
-fn make_count_txt() {
-    let mut file = fs::File::create("count.txt").unwrap();
-    writeln!(file, "0").unwrap();
-}
-
 fn main() {
     let folders = get_folders_sorted();
     write_to_folders_txt(folders.clone());
     let mp4_files = get_mp4_files_sorted(folders);
-    make_count_txt();
     reencode_files_parallel(&mp4_files);
     let renamed_files = rename_files_sequential(mp4_files);
     create_ffmpeg_concat_file(renamed_files);
