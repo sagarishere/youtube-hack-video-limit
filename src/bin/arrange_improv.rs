@@ -108,12 +108,14 @@ fn reencode_files_parallel(mp4_files: &[(String, String)]) {
         let mut file = fs::File::create(&count_file).unwrap();
         writeln!(file, "{}", mp4_files.len()).unwrap();
     }
-    // write number 0 to count.txt
-    let mut _file = fs::OpenOptions::new()
+
+    let mut file = fs::OpenOptions::new()
         .write(true)
         .truncate(true)
         .open(&count_file)
         .unwrap();
+    // Now, write the string "0" to the file
+    file.write_all(b"0").unwrap(); // b"0" is used because write_all expects bytes
     mp4_files.par_iter().for_each(|(folder, file_name)| {
         let old_path = current_dir.join(folder).join(file_name);
         // read count.txt
