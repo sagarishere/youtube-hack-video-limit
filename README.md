@@ -96,6 +96,16 @@ To make rust executable
         cargo build --release --bin arrange_improv && cp target/release/arrange_improv .
     ```
 
+## Experimentation
+
+Try standalone combine_videos.py instead of the rust combine videos
+
+    ```bash
+        # To concatenate the videos => will create combined_video.mp4
+        find . -type f -name "._*" -delete
+        python combine_videos.py
+    ```
+
 ## Implications
 
 - This bypasses the youtube video limit of 10 videos per day, as the videos are concatenated into one video but viewed as separate videos.
