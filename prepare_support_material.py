@@ -1,5 +1,6 @@
 import os
 import sys
+import shutil
 
 def delete_all_files_except_self():
     """Deletes all files in the current directory except for the script itself."""
