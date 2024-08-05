@@ -71,6 +71,11 @@ Direct way to delete unwated files
         find . -type f -name "*.mp4" -delete
     ```
 
+    ```bash
+        # To prepare the support material => will delete all files except for support material
+        python prepare_support_material.py
+    ```
+
 Direct bash command to make folder.txt
 
     ```bash
