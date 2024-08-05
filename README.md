@@ -49,6 +49,10 @@ PS: a small scrapper also written for scrapping a source once it has been saved 
 ### To concatenate the videos
 
     ```bash
+        find . -type f -name "._*" -delete
+    ```
+
+    ```bash
         # To concatenate the videos => will create combined_video.mp4
         cargo run --release --bin combine_videos
     ```
