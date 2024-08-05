@@ -102,16 +102,42 @@ fn reencode_video(input_file: &str) -> io::Result<()> {
 
 fn reencode_files_parallel(mp4_files: &[(String, String)]) {
     let current_dir = env::current_dir().unwrap();
+    // if a file count.txt is not present, create it
+    let count_file = current_dir.join("count.txt");
+    if !count_file.exists() {
+        let mut file = fs::File::create(&count_file).unwrap();
+        writeln!(file, "{}", mp4_files.len()).unwrap();
+    }
+    // write number 0 to count.txt
+    let mut _file = fs::OpenOptions::new()
+        .write(true)
+        .truncate(true)
+        .open(&count_file)
+        .unwrap();
     mp4_files.par_iter().for_each(|(folder, file_name)| {
         let old_path = current_dir.join(folder).join(file_name);
+        // read count.txt
+        let countfile = fs::read("./count.txt").unwrap();
+        let count = String::from_utf8(countfile).unwrap();
+        // increment count
+        let count_int: i32 = count.trim().parse().unwrap();
+        let new_count = count_int + 1;
+        // write new count to count.txt, overwrite old content of count.txt
+        let mut file = fs::OpenOptions::new()
+            .write(true)
+            .truncate(true)
+            .open("./count.txt")
+            .unwrap();
+        writeln!(file, "{}", new_count).unwrap();
         println!(
-            "\x1B[33mRe-encoding file {} of {}\x1B[0m",
+            "\x1B[33mRe-encoding file {} of {}. Total files started: {}\x1B[0m",
             mp4_files
                 .iter()
                 .position(|x| x == &(folder.clone(), file_name.clone()))
                 .unwrap()
                 + 1,
-            mp4_files.len()
+            mp4_files.len(),
+            new_count
         );
         reencode_video(old_path.to_str().unwrap()).unwrap();
     });
